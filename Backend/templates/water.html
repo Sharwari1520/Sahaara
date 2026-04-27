@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Water Intake Tracker 💧</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+    <style>
+        :root {
+            --bg-blue: #f0f7ff;
+            --card-white: #ffffff;
+            --primary-blue: #1e3a8a;
+            --accent-blue: #3b82f6;
+            --light-blue-btn: #e0f2fe;
+            --progress-bg: #e2e8f0;
+            --progress-fill: #60a5fa;
+        }
+        body.water-page {
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--primary-blue);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 40px 20px; /* Changed top padding to 0 */
+}
+
+        .water-header { text-align: center; margin-bottom: 30px; }
+        .water-header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .water-header p { font-size: 1.1rem; color: #475569; }
+
+        .water-container {
+    background: var(--card-white);
+    width: 95%;
+    max-width: 680px;
+    padding: 32px;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    margin-top: 20px; /* Adds a clean small gap below the nav bar */
+}
+
+        .water-goal-selection span { display:block; font-weight:700; margin-bottom:15px; }
+
+        .goal-buttons {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:12px;
+            margin-bottom:25px;
+        }
+
+        .goal-buttons button {
+            background:var(--light-blue-btn);
+            border:none;
+            padding:12px;
+            border-radius:12px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .btn-full { grid-column: span 2; }
+
+        .water-goal { display:flex; justify-content:space-between; font-weight:700; }
+
+        .water-progress-bar {
+            background:var(--progress-bg);
+            height:14px;
+            border-radius:10px;
+            overflow:hidden;
+            margin-bottom:15px;
+        }
+
+        .water-progress-fill {
+            background:var(--progress-fill);
+            height:100%;
+            width:0%;
+            transition:0.5s;
+        }
+
+        .water-progress-text {
+            text-align:center;
+            margin-bottom:20px;
+            font-weight:600;
+        }
+
+        .water-buttons {
+            display:flex;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        .water-buttons button {
+            flex:1;
+            background:var(--light-blue-btn);
+            border:none;
+            padding:15px;
+            border-radius:12px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .water-log h3 { margin-top:20px; }
+        #waterLogList { list-style:none; padding:0; }
+
+        #waterLogList li {
+            background:#f8fafc;
+            padding:8px 12px;
+            border-radius:8px;
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:6px;
+        }
+
+        .water-success {
+            display:none;
+            background:#dcfce7;
+            color:#166534;
+            padding:12px;
+            border-radius:12px;
+            text-align:center;
+            font-weight:700;
+            margin-bottom:15px;
+        }
+
+        .water-back button {
+            width:100%;
+            border:none;
+            background:none;
+            color:var(--accent-blue);
+            font-weight:700;
+            cursor:pointer;
+        }
+        /* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+
+<body class="water-page">
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+<main class="water-container">
+    <h1 style="text-align: center; margin-bottom: 20px;">Water Intake Tracker 💧</h1>
+
+<section class="water-goal-selection">
+    <span>Select Your Goal:</span>
+    <div class="goal-buttons">
+        <button data-goal="500">500 ml</button>
+        <button data-goal="700">700 ml</button>
+        <button data-goal="1000">1000 ml</button>
+        <button data-goal="1500">1500 ml</button>
+        <button class="btn-full" data-goal="2000">2000 ml</button>
+    </div>
+</section>
+
+<section class="water-goal">
+    <span>Daily Goal:</span>
+    <strong id="goalAmount">2000 ml</strong>
+</section>
+
+<div class="water-progress-bar">
+    <div class="water-progress-fill" id="waterProgressFill"></div>
+</div>
+
+<p class="water-progress-text">
+    <span id="currentIntake">0</span> / <span id="currentGoal">2000</span> ml
+</p>
+
+<div class="water-buttons">
+    <button data-add="250">+250</button>
+    <button data-add="500">+500</button>
+    <button data-add="750">+750</button>
+</div>
+
+<section class="water-log">
+    <h3>Today's Intake</h3>
+    <ul id="waterLogList"></ul>
+</section>
+<div class="water-success" id="waterSuccessMessage">💙 Goal achieved!</div>
+
+</main>
+<section id="aboutSection" class="info-section" style="display:none; margin: 40px auto; max-width: 600px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto; max-width: 600px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const userId = localStorage.getItem("user_id");
+    if(!userId){
+        alert("User not logged in!");
+        return;
+    }
+
+    // Always start fresh
+    let currentIntake = 0;
+    let dailyGoal = 2000;
+    let logEntries = [];
+
+    const currentIntakeEl = document.getElementById("currentIntake");
+    const currentGoalEl = document.getElementById("currentGoal");
+    const goalAmountEl = document.getElementById("goalAmount");
+    const waterProgressFillEl = document.getElementById("waterProgressFill");
+    const waterLogListEl = document.getElementById("waterLogList");
+    const waterSuccessMessageEl = document.getElementById("waterSuccessMessage");
+
+    // Update UI
+    function updateUI(){
+        currentIntakeEl.innerText = currentIntake;
+        currentGoalEl.innerText = dailyGoal;
+        goalAmountEl.innerText = dailyGoal + " ml";
+
+        const percent = (currentIntake / dailyGoal) * 100;
+        waterProgressFillEl.style.width = percent + "%";
+
+        waterLogListEl.innerHTML = "";
+        logEntries.forEach(e => {
+            const li = document.createElement("li");
+            li.innerHTML = `+${e.amount} ml <small>${e.time}</small>`;
+            waterLogListEl.appendChild(li);
+        });
+
+        waterSuccessMessageEl.style.display =
+            currentIntake >= dailyGoal ? "block" : "none";
+    }
+
+    // Set Goal
+    function setGoal(goal){
+        fetch("/api/water/set-goal", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({user_id:userId, goal_ml:goal})
+        })
+        .then(() => {
+            dailyGoal = goal;
+            logEntries = [];
+            currentIntake = 0;
+            updateUI(); // reset UI
+        })
+        .catch(err => console.error(err));
+    }
+
+    // Add Water
+    function addWater(amount){
+        fetch("/api/water/add", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({user_id:userId, amount_ml:amount})
+        })
+        .then(() => {
+            currentIntake += amount;
+            logEntries.push({amount:amount,time:new Date().toLocaleTimeString()});
+            updateUI();
+        })
+        .catch(err => console.error(err));
+    }
+
+    // Attach button events
+    document.querySelectorAll(".goal-buttons button").forEach(btn => {
+        btn.addEventListener("click", ()=>setGoal(parseInt(btn.dataset.goal)));
+    });
+    document.querySelectorAll(".water-buttons button").forEach(btn => {
+        btn.addEventListener("click", ()=>addWater(parseInt(btn.dataset.add)));
+    });
+
+    // Start with fresh UI every time
+    updateUI();
+});
+</script>
+
+</body>
+</html>

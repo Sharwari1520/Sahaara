@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency SOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+    
+    <style>
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    display: flex;
+    flex-direction: column; /* This stacks the header on top of the content */
+    align-items: center;    /* Keeps everything centered horizontally */
+    min-height: 100vh;      /* Use min-height so content isn't cut off on small screens */
+}
+/* Ensure the header container takes up the full width */
+#mainHeader {
+    width: 100%;
+}
+/* Add a wrapper or margin to the SOS page to center it vertically if desired */
+.sos-page {
+    flex-grow: 1;           /* Takes up remaining space */
+    display: flex;
+    align-items: center;    /* Centers the card vertically */
+    justify-content: center;
+}
+        .sos-card {
+            background: #020617;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            position: relative;
+            text-align: center;
+        }
+
+        h2 { color: #fff; margin-bottom: 20px; }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+
+        .primary-btn {
+            width: 100%;
+            padding: 12px;
+            background: #22c55e;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .sos-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: red;
+            color: white;
+            font-size: 32px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hidden { display: none; }
+
+        .edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sos-message {
+            margin-top: 15px;
+            font-weight: bold;
+            color: white;
+        }
+        /* Styling for Info Sections on SOS Page */
+.info-section {
+    padding: 25px;
+    background: #020617; /* Matches your SOS card */
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.info-section h2 {
+    color: #22c55e; /* Green title to match your primary button */
+    font-size: 1.2rem;
+}
+
+.info-box {
+    background: #1e293b;
+    padding: 12px;
+    border-radius: 8px;
+    width: 85%;
+    margin: 8px auto;
+    display: block; /* Stacked for the narrow SOS layout */
+    color: #cbd5e1;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+/* --- THE "NUCLEAR" OPTION TO FORCE THE PANEL DARK --- */
+
+/* 1. Target every possible container inside the header */
+#mainHeader > *, 
+#mainHeader nav, 
+#mainHeader div,
+.header-container { 
+    background: #020617 !important; /* Matches SOS card */
+    background-image: none !important; 
+    background-color: #020617 !important;
+    border: 1px solid #1e293b !important;
+}
+
+/* 2. Fix the text colors for the whole bar */
+#mainHeader * {
+    color: #ffffff !important;
+}
+
+/* 3. Ensure the Profile Icon looks right */
+#profileLogo, #profileLogo * {
+    background: transparent !important;
+    border-color: #ffffff !important;
+}
+
+/* 4. Keep the SAHAARA text bright white */
+.logo-text {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+    </style>
+</head>
+
+<body>
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+<div class="sos-page">
+    <div class="sos-card">
+        <button id="editBtn" class="edit-btn hidden">✏️ Edit</button>
+        <div id="sosFormSection" class="hidden">
+            <h2>Emergency Contact</h2>
+            <h3>Contact 1</h3>
+            <input type="text" id="contact1Name" placeholder="Name">
+            <input type="email" id="contact1Email" placeholder="Email">
+            <h3>Contact 2</h3>
+            <input type="text" id="contact2Name" placeholder="Name">
+            <input type="email" id="contact2Email" placeholder="Email">
+
+            <button id="saveContactBtn" type="button" class="primary-btn">Save Contact</button>
+        </div>
+        <div id="sosButtonSection" class="hidden">
+            <button id="sosBtn" class="sos-btn">🚨 SOS</button>
+        </div>
+        <p id="message" class="sos-message"></p>
+
+    </div>
+</div>
+
+<section id="aboutSection" class="info-section" style="display:none; margin: 40px auto; max-width: 400px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto; max-width: 400px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveContactBtn");
+    const sosBtn = document.getElementById("sosBtn");
+    const sosForm = document.getElementById("sosFormSection");
+    const sosSection = document.getElementById("sosButtonSection");
+    const message = document.getElementById("message");
+
+    const contact1Name = document.getElementById("contact1Name");
+    const contact1Email = document.getElementById("contact1Email");
+    const contact2Name = document.getElementById("contact2Name");
+    const contact2Email = document.getElementById("contact2Email");
+
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+        alert("User not logged in!");
+        return;
+    }
+
+    let savedContacts = null; // 🔥 FIX
+
+    fetch("/api/sos/get-contacts?user_id=" + userId)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success" && data.contacts) {
+                savedContacts = data.contacts;
+
+                sosForm.classList.add("hidden");
+                sosSection.classList.remove("hidden");
+                editBtn.classList.remove("hidden");
+
+                contact1Name.value = data.contacts.contact1_name || "";
+                contact1Email.value = data.contacts.contact1_email || "";
+                contact2Name.value = data.contacts.contact2_name || "";
+                contact2Email.value = data.contacts.contact2_email || "";
+            } else {
+                sosForm.classList.remove("hidden");
+            }
+        });
+
+    saveBtn.addEventListener("click", function () {
+        if (!contact1Name.value || !contact1Email.value ||
+            !contact2Name.value || !contact2Email.value) {
+            alert("Please fill all fields!");
+            return;
+        }
+
+        fetch("/api/sos/save-contacts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: userId,
+                contact1_name: contact1Name.value,
+                contact1_email: contact1Email.value,
+                contact2_name: contact2Name.value,
+                contact2_email: contact2Email.value
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                savedContacts = {
+                    contact1_email: contact1Email.value,
+                    contact2_email: contact2Email.value
+                };
+
+                message.textContent = "✅ Contacts saved successfully!";
+                message.style.color = "green";
+
+                sosForm.classList.add("hidden");
+                sosSection.classList.remove("hidden");
+                editBtn.classList.remove("hidden");
+            }
+        });
+    });
+
+    editBtn.addEventListener("click", function () {
+        sosForm.classList.remove("hidden");
+        sosSection.classList.add("hidden");
+        editBtn.classList.add("hidden");
+    });
+
+    sosBtn.addEventListener("click", function () {
+        message.textContent = "Sending SOS...";
+        message.style.color = "white";
+
+        navigator.geolocation.getCurrentPosition(
+            pos => sendSOS(pos.coords.latitude, pos.coords.longitude),
+            () => sendSOS(),
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+        );
+    });
+
+    function sendSOS(lat, long) {
+        const emails = savedContacts
+            ? `${savedContacts.contact1_email},${savedContacts.contact2_email}`
+            : `${contact1Email.value},${contact2Email.value}`;
+
+        fetch("/send-sos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contact_email: emails,
+                latitude: lat,
+                longitude: long
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                message.textContent = "🚨 SOS sent successfully!";
+                message.style.color = "green";
+            } else {
+                message.textContent = "❌ Failed to send SOS";
+                message.style.color = "red";
+            }
+        })
+        .catch(() => {
+            message.textContent = "❌ Error sending SOS";
+            message.style.color = "red";
+        });
+    }
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercise & Mobility – SAHAARA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #fdf2f8);
+            color: #1f2937;
+        }
+        h1, h2, h3 {
+            margin: 0;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================= */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        /* =========================
+           LEVEL SELECTION
+        ========================= */
+        .levels {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            background: white;
+            padding: 15px 22px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .level-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        .level-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* =========================
+           CATEGORIES
+        ========================= */
+        .category {
+            margin-bottom: 80px;
+            text-align: center; 
+        }
+
+        .category h2 {
+            display: inline-block;
+            padding: 10px 26px;
+            background: #c7afdb;   /* soft pastel green */
+            border-radius: 999px;  /* pill shape */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .exercise-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 25px;
+    justify-content: center;
+    justify-items: center;   /* 🔥 this is the key line */
+}
+
+        /* =========================
+   EXERCISE CARD
+========================= */
+.exercise-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 520px;   /* increase to 450px if you want even wider */
+}
+
+
+.exercise-card img {
+    width: 100%;
+    max-height: 320px;   /* taller to show more of image */
+    height: auto;        /* keeps original aspect ratio */
+    object-fit: contain; /* shows full image without cropping */
+    border-radius: 20px;
+    margin-bottom: 12px;
+    background: #f3f4f6; /* optional: light background for transparent images */
+}
+
+.exercise-card h3 {
+    font-size: 18px;
+}
+
+.exercise-card p {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.duration {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6366f1;
+}
+
+.done-btn {
+    background: #e5e7eb;
+    padding: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.done-btn.completed {
+    background: #22c55e;
+    color: white;
+}
+
+
+        /* =========================
+           PROGRESS
+        ========================= */
+        .progress {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #020617;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* =========================
+   POPUP STYLES
+========================= */
+.popup-overlay {
+    display: none; /* hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-width: 400px;
+    width: 90%;
+}
+
+.popup-content h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #6366f1;
+}
+
+.popup-content p {
+    margin-bottom: 25px;
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.popup-content button {
+    padding: 10px 25px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.popup-content button:hover {
+    background: #4f46e5;
+}
+/* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+
+<body>
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+<div class="container">
+    <div class="header">
+        <h1>Exercise & Mobility 🏃‍♀️</h1>
+        <p>Gentle daily movement for your body</p>
+    </div>
+    <!-- LEVEL SELECTION -->
+    <div class="levels">
+        <button class="level-btn" onclick="selectLevel('beginner')">Beginner – Bed / Chair</button>
+        <button class="level-btn" onclick="selectLevel('moderate')">Moderate – Standing</button>
+        <button class="level-btn" onclick="selectLevel('advanced')">Advanced – Full Body</button>
+    </div>
+    <!-- EXERCISE CONTENT -->
+    <div id="exerciseContent"></div>
+</div>
+<!-- PROGRESS -->
+<div class="progress">
+    Completed: <span id="completedCount">0</span>
+</div>
+
+<!-- =========================
+   CONGRATULATORY POPUP
+========================= -->
+<div id="completionPopup" class="popup-overlay" style="display: none;">
+    <div class="popup-content">
+        <h2>🎉 Congratulations!</h2>
+        <p>You have completed all exercises for this level.</p>
+        <button id="closePopup">Close</button>
+    </div>
+</div>
+<section id="aboutSection" class="info-section" style="display:none; margin: 40px auto; max-width: 800px; padding-bottom: 100px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto; max-width: 800px; padding-bottom: 100px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+/* =========================
+   EXERCISE DATA
+========================= */
+const exercises = {
+    beginner: {
+        Stretching: [
+            {
+                name: "Neck Stretch",
+                duration: "30 seconds",
+                image: "/static/images/neck_stretch.png",
+                desc: "Sit comfortably and slowly tilt your head side to side."
+            }
+        ],
+        Cardio: [
+            {
+                name: "Seated March",
+                duration: "1 minute",
+                image:"/static/images/seated_march.png", 
+                desc: "Lift your knees one by one while seated."
+            }
+        ],
+        Mobility: [
+            {
+                name: "Ankle Rotations",
+                duration: "30 seconds",
+                image: "/static/images/ankle_rotations.png", 
+                desc: "Rotate your ankles gently in circles."
+            }
+        ],
+        Breathing: [
+            {
+                name: "Deep Breathing",
+                duration: "2 minutes",
+                image: "/static/images/deep_breathing.png", 
+                desc: "Inhale deeply through nose, exhale slowly."
+            }
+        ]
+    },
+    moderate: {
+        Stretching: [
+            {
+                name: "Standing Side Stretch",
+                duration: "30 seconds",
+                image: "/static/images/standing_side_stretch.png", 
+                desc: "Stretch arms overhead and bend sideways."
+            }
+        ],
+        Cardio: [
+            {
+                name: "March in Place",
+                duration: "1 minute",
+                image: "/static/images/march_in_place.png", 
+                desc: "March gently while standing."
+            }
+        ],
+        Mobility: [
+            {
+                name: "Hip Circles",
+                duration: "45 seconds",
+                image: "/static/images/hip_cirlces.png", 
+                desc: "Rotate hips slowly in circles."
+            }
+        ],
+        Breathing: [
+            {
+                name: "Box Breathing",
+                duration: "2 minutes",
+                image: "/static/images/box_breathing.png", 
+                desc: "Inhale, hold, exhale, hold – 4 seconds each."
+            }
+        ]
+    },
+    advanced: {
+        Stretching: [
+            {
+                name: "Dynamic Full Stretch",
+                duration: "1 minute",
+                image: "/static/images/dynamic_full_stretch.png", 
+                desc: "Stretch arms and legs dynamically."
+            }
+        ],
+        Cardio: [
+            {
+                name: "Jumping Jacks",
+                duration: "1 minute",
+                image: "/static/images/jumping_jacks.png", 
+                desc: "Light jumping jacks at a steady pace."
+            }
+        ],
+        Mobility: [
+            {
+                name: "Spinal Mobility Flow",
+                duration: "1 minute",
+                image: "/static/images/spinal_mobility.png", 
+                desc: "Flow through spinal flexion and extension."
+            }
+        ],
+        Breathing: [
+            {
+                name: "Breath Control",
+                duration: "3 minutes",
+                image: "/static/images/breath_control.png", 
+                desc: "Slow controlled breathing."
+            }
+        ]
+    }
+};
+
+let completed = 0;
+
+// Replace this with actual logged-in user ID in your app
+const currentUserId = 1;
+
+function selectLevel(level) {
+    document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    completed = 0;
+    document.getElementById("completedCount").innerText = completed;
+
+    const container = document.getElementById("exerciseContent");
+    container.innerHTML = "";
+
+    Object.keys(exercises[level]).forEach(category => {
+        const section = document.createElement("div");
+        section.className = "category";
+        section.innerHTML = `<h2>${category}</h2>`;
+
+        const list = document.createElement("div");
+        list.className = "exercise-list";
+
+        exercises[level][category].forEach(ex => {
+            const card = document.createElement("div");
+            card.className = "exercise-card";
+
+            const btn = document.createElement("button");
+            btn.className = "done-btn";
+            btn.innerText = "Mark as Done";
+
+            btn.onclick = () => {
+                if (!btn.classList.contains("completed")) {
+                    btn.classList.add("completed");
+                    btn.innerText = "Completed ✓";
+                    completed++;
+                    document.getElementById("completedCount").innerText = completed;
+
+                    // ---- Log to backend ----
+                    fetch("/log_exercise", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            user_id: currentUserId,
+                            level: level,
+                            exercise_name: ex.name,
+                            category: category
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log("Exercise logged:", data))
+                    .catch(err => console.error("Error logging exercise:", err));
+
+                    // ---- Check if all exercises completed ----
+                    const totalExercises = Object.values(exercises[level])
+                        .reduce((sum, arr) => sum + arr.length, 0);
+
+                    if (completed === totalExercises) {
+                        document.getElementById("completionPopup").style.display = "flex";
+                    }
+                }
+            };
+
+            card.innerHTML = `
+                <img src="${ex.image}" alt="${ex.name}" class="exercise-img">
+                <h3>${ex.name}</h3>
+                <span class="duration">${ex.duration}</span>
+                <p>${ex.desc}</p>
+            `;
+
+            card.appendChild(btn);
+            list.appendChild(card);
+        });
+
+        section.appendChild(list);
+        container.appendChild(section);
+    });
+}
+
+// ---- Close popup button ----
+document.getElementById("closePopup").onclick = () => {
+    document.getElementById("completionPopup").style.display = "none";
+};
+</script>
+</body>
+</html>

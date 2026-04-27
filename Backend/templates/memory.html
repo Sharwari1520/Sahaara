@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Memory Game 🧩 | SAHAARA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/script.js"></script>
+
+<style>
+:root{
+--lime-bg:#f4ffd6;
+--lime-card:#ecffb5;
+--lime-accent:#9bdc65;
+--lime-dark:#558b2f;
+--text:#2f4f1a;
+}
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:var(--lime-bg);
+    color:var(--text);
+    display:flex;
+    flex-direction: column; /* Stacks header on top of the game container */
+    align-items:center;     /* Centers everything horizontally */
+    min-height:100vh;
+}
+
+/* Ensure the header takes up the full width */
+#mainHeader {
+    width: 100%;
+}
+
+/* Optional: Add a little breathing room below the header */
+.container {
+    background:#fcfff1;
+    width:95%;
+    max-width:1100px;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 20px 45px rgba(0,0,0,.15);
+    margin: 20px 0 40px 0; /* Adds space top and bottom */
+}
+
+.container{
+background:#fcfff1;
+width:95%;
+max-width:1100px;
+padding:25px;
+border-radius:20px;
+box-shadow:0 20px 45px rgba(0,0,0,.15);
+}
+
+h1{text-align:center;color:var(--lime-dark);}
+.subtitle{text-align:center;margin-bottom:20px;}
+
+.controls{
+display:flex;
+gap:12px;
+justify-content:center;
+margin-bottom:10px;
+}
+
+button,select{
+background:var(--lime-accent);
+border:none;
+padding:12px 18px;
+border-radius:14px;
+cursor:pointer;
+font-weight:600;
+color:#1f3b08;
+}
+
+button:hover{background:var(--lime-dark);color:white;}
+
+.stats{
+display:flex;
+justify-content:space-around;
+margin:15px 0;
+font-weight:600;
+}
+
+.game-board{
+display:grid;
+gap:12px;
+justify-content:center;
+margin-top:20px;
+}
+
+.card{
+width:85px;
+height:85px;
+background:var(--lime-card);
+border-radius:16px;
+font-size:34px;
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+transition:.3s;
+}
+
+.card.flipped{background:white;transform:scale(1.05);}
+.card.matched{background:#c8f7b0;cursor:default;}
+
+.progress{
+margin-top:30px;
+background:#efffd1;
+padding:20px;
+border-radius:16px;
+}
+
+.badges span{
+display:inline-block;
+margin:5px;
+padding:8px 12px;
+background:#dbffac;
+border-radius:12px;
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.4);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.modal-box{
+background:white;
+padding:30px;
+border-radius:20px;
+text-align:center;
+animation:pop .4s ease;
+}
+
+@keyframes pop{
+from{transform:scale(.7);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+.confetti{font-size:40px;}
+/* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+</style>
+</head>
+
+<body>
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+<div class="container">
+<h1>🧩 Memory Game</h1>
+<div class="subtitle">Train focus, recall & mental agility</div>
+<div class="controls">
+<select id="difficulty">
+<option value="easy">Easy (4×3)</option>
+<option value="medium">Medium (4×4)</option>
+<option value="hard">Hard (6×5)</option>
+</select>
+<button onclick="openMode()">Start Game</button>
+</div>
+<div class="stats">
+<div>⏱ <span id="time">0</span>s</div>
+<div id="movesContainer" style="display:none;">Moves: <span id="moves">0</span></div>
+<div>Stars: <span id="stars">⭐⭐⭐</span></div>
+</div>
+
+<div class="game-board" id="board"></div>
+
+<div class="progress">
+<h3>🏆 Progress & Motivation</h3>
+<p>🔥 Streak: <span id="streak">0</span> days</p>
+<p>🏅 Best Score: <span id="bestScore">—</span></p>
+<div class="badges">
+<span>🧩 Memory Starter</span>
+<span>🧠 Sharp Thinker</span>
+<span>👑 Memory Master</span>
+</div>
+</div>
+</div>
+
+<!-- MODE SELECT -->
+<div class="modal" id="modeModal">
+<div class="modal-box">
+<h2>Select Mode</h2>
+<button onclick="startGame('pairs')">🧩 Match Pairs</button><br><br>
+<button onclick="startGame('focus')">🌟 Focus Recall</button>
+</div>
+</div>
+
+<!-- WIN -->
+<div class="modal" id="winModal">
+<div class="modal-box">
+<div class="confetti">🎉✨🎊</div>
+<h2>Great Job!</h2>
+<p>Your memory is getting stronger 🌱</p>
+<button onclick="closeWin()">Continue</button>
+</div>
+</div>
+
+<section id="aboutSection" class="info-section" style="display:none; margin: 40px auto; max-width: 600px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto; max-width: 600px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+const emojis = ["🐶","🍎","🎵","🚗","🌸","⭐","🐱","🍕","⚽","🎈","🌙","🍩","🐼","🎧","🍀"];
+let first = null, second = null, lock = false;
+let moves = 0, matches = 0, time = 0, timer;
+let currentMode = "pairs";
+
+// TODO: Replace with actual logged-in user ID
+const USER_ID = 1;
+
+const board = document.getElementById("board");
+const timeEl = document.getElementById("time");
+const movesEl = document.getElementById("moves");
+const starsEl = document.getElementById("stars");
+const bestScoreEl = document.getElementById("bestScore");
+const streakEl = document.getElementById("streak");
+
+function openMode(){
+    document.getElementById("modeModal").style.display = "flex";
+}
+
+function startGame(mode){
+    currentMode = mode;
+    document.getElementById("modeModal").style.display = "none";
+
+    // Show moves container now
+    document.getElementById("movesContainer").style.display = "block";
+
+    reset();
+
+    let diff = document.getElementById("difficulty").value;
+    let [r, c] = diff === "easy" ? [4,3] : diff === "medium" ? [4,4] : [6,5];
+    let pairs = (r * c) / 2;
+    let cards = [...emojis.slice(0,pairs), ...emojis.slice(0,pairs)].sort(() => Math.random() - 0.5);
+
+    board.style.gridTemplateColumns = `repeat(${c},85px)`;
+    board.innerHTML = "";
+
+    cards.forEach(s => {
+        let d = document.createElement("div");
+        d.className = "card";
+        d.dataset.s = s;
+        d.textContent = currentMode === "focus" ? s : "❔";
+        d.onclick = () => flip(d);
+        board.appendChild(d);
+    });
+
+    timer = setInterval(() => {time++; timeEl.textContent = time}, 1000);
+
+    if(currentMode === "focus") setTimeout(hideAll, 3000);
+
+    // Fetch previous best & streaks from backend
+    fetch(`/memory_game/best_scores/${USER_ID}`)
+    .then(res => res.json())
+    .then(data => {
+        let best = null;
+        data.forEach(item => {
+            if(item.game_mode === currentMode && item.difficulty === diff) { best = item.best_moves; }
+        });
+        bestScoreEl.textContent = best || "—";
+    });
+
+    fetch(`/memory_game/streak/${USER_ID}`)
+    .then(res => res.json())
+    .then(data => { streakEl.textContent = data.current_streak || 0; });
+}
+
+function hideAll(){
+    document.querySelectorAll(".card").forEach(c => { c.textContent = "❔"; });
+}
+
+function flip(card){
+    if(lock || card === first || card.classList.contains("matched")) return;
+
+    card.textContent = card.dataset.s;
+    card.classList.add("flipped");
+
+    if(!first){ first = card; return; }
+    second = card;
+    movesEl.textContent = ++moves;
+
+    if(first.dataset.s === second.dataset.s){
+        first.classList.add("matched");
+        second.classList.add("matched");
+        matches++;
+        resetPick();
+
+        if(matches === document.querySelectorAll(".card").length / 2){
+            clearInterval(timer);
+            updateBestAndBackend();
+            document.getElementById("winModal").style.display = "flex";
+        }
+    } else {
+        lock = true;
+        setTimeout(() => {
+            first.textContent = second.textContent = "❔";
+            first.classList.remove("flipped");
+            second.classList.remove("flipped");
+            resetPick();
+        }, 700);
+    }
+}
+
+function resetPick(){ [first, second, lock] = [null, null, false]; }
+
+function reset(){
+    clearInterval(timer);
+    time = 0; moves = 0; matches = 0;
+    timeEl.textContent = 0; movesEl.textContent = 0;
+    starsEl.textContent = "⭐⭐⭐";
+}
+
+function calculateStars(moves){
+    if(moves <= 12) return 3;
+    if(moves <= 18) return 2;
+    return 1;
+}
+
+function updateBestAndBackend(){
+    let stars = calculateStars(moves);
+    starsEl.textContent = "⭐".repeat(stars);
+
+    fetch("/memory_game/session", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            user_id: USER_ID,
+            game_mode: currentMode,
+            difficulty: document.getElementById("difficulty").value,
+            moves: moves,
+            time_taken: time,
+            stars: stars
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.best_moves) bestScoreEl.textContent = data.best_moves;
+        if(data.current_streak) streakEl.textContent = data.current_streak;
+    });
+}
+
+function closeWin(){ document.getElementById("winModal").style.display = "none"; }
+</script>
+</body>
+</html>

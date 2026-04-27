@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Health Check-in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+    <style>
+        /* =========================
+           FEATURE CSS (merged from features.css)
+        ========================= */
+        body.feature-page {
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+}
+        body.feature-page {
+    background: linear-gradient(135deg, #fff7cc, #e8f4ff);
+    min-height: 100vh;
+    display: flex;
+    /* 1. Change direction to column so header stays on top */
+    flex-direction: column; 
+    /* 2. Align items to center horizontally */
+    align-items: center;    
+    /* 3. Remove justify-content: center if you want the header at the very top */
+    justify-content: flex-start; 
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+/* 4. Ensure the header takes up the full width */
+#mainHeader {
+    width: 100%;
+    margin-bottom: 20px; /* Adds some space between header and card */
+}
+
+/* 5. Adjust the card margin to keep it looking nice */
+body.feature-page .feature-card {
+    background: #ffffff;
+    width: 95%;
+    max-width: 680px;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+    margin-bottom: 40px; /* Space at the bottom */
+}
+
+        body.feature-page h1 {
+    text-align: center;
+    color: #342a0a;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 35px; /* Added this to create the gap */
+}
+
+        body.feature-page .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        body.feature-page .mood-section h2,
+body.feature-page .physical-section h2 {
+    margin-top: 20px;    /* Gap above the question */
+    margin-bottom: 14px; /* Gap below the question */
+    color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+}
+        body.feature-page .mood-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        body.feature-page .mood-btn {
+            flex: 1;
+            padding: 15px 10px;
+            border-radius: 16px;
+            border: 2px solid #f0f0f0;
+            background: #fffbea;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        body.feature-page .mood-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        body.feature-page .mood-btn span {
+            display: block;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        body.feature-page .mood-btn.active {
+            border-color: #ffd54f;
+            box-shadow: 0 0 12px rgba(255, 213, 79, 0.6);
+            background: #fff3c4;
+        }
+
+        body.feature-page .question {
+            margin-bottom: 18px;
+        }
+
+        body.feature-page .question p {
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 15px;
+    color: #000000;
+}
+
+        body.feature-page .toggle-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        body.feature-page .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            background: #f9f9f9;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
+
+        body.feature-page .toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        body.feature-page .toggle-btn.yes.active {
+            background: #d9f7e5;
+            border-color: #6fcf97;
+            box-shadow: 0 0 8px rgba(111, 207, 151, 0.5);
+        }
+
+        body.feature-page .toggle-btn.no.active {
+            background: #e8f0ff;
+            border-color: #90b4ff;
+            box-shadow: 0 0 8px rgba(144, 180, 255, 0.5);
+        }
+
+        body.feature-page .save-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            border-radius: 16px;
+            border: none;
+            background: #ffd54f;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        body.feature-page .save-btn:hover {
+            background: #ffca28;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 202, 40, 0.4);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .popup-box {
+            background: #ffffff;
+            padding: 24px 28px;
+            border-radius: 14px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: popIn 0.25s ease;
+        }
+
+        .popup-box h3 {
+            margin-bottom: 10px;
+            color: #2f855a;
+        }
+
+        .popup-box p {
+            font-size: 15px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .popup-box button {
+            padding: 8px 22px;
+            border: none;
+            border-radius: 20px;
+            background: #38a169;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .popup-box button:hover {
+            background: #2f855a;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        /* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+
+<body class="feature-page">
+    <!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+
+    <div class="feature-card">
+
+        <!-- Page Title -->
+        <h1>Daily Health Check-in ✅</h1>
+
+        <!-- 1️⃣ MOOD CHECK -->
+        <section class="mood-section">
+            <h2>How are you feeling today?</h2>
+
+            <div class="mood-options">
+                <button class="mood-btn" data-mood="Happy">😊<span>Happy</span></button>
+                <button class="mood-btn" data-mood="Okay">😐<span>Okay</span></button>
+                <button class="mood-btn" data-mood="Sad">😟<span>Sad</span></button>
+                <button class="mood-btn" data-mood="Unwell">😣<span>Unwell</span></button>
+            </div>
+        </section>
+
+        <!-- 2️⃣ PHYSICAL FEELING -->
+        <section class="physical-section">
+            <h2>How is your body feeling today?</h2>
+
+            <div class="question">
+                <p>Feeling tired today?</p>
+                <div class="toggle-group" data-question="tired">
+                    <button class="toggle-btn yes">Yes</button>
+                    <button class="toggle-btn no">No</button>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>Any pain or discomfort?</p>
+                <div class="toggle-group" data-question="pain">
+                    <button class="toggle-btn yes">Yes</button>
+                    <button class="toggle-btn no">No</button>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>Feeling dizzy?</p>
+                <div class="toggle-group" data-question="dizzy">
+                    <button class="toggle-btn yes">Yes</button>
+                    <button class="toggle-btn no">No</button>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>Slept well last night?</p>
+                <div class="toggle-group" data-question="slept">
+                    <button class="toggle-btn yes">Yes</button>
+                    <button class="toggle-btn no">No</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SAVE BUTTON -->
+        <button id="saveCheckin" class="save-btn">
+            Save Today’s Check-in
+        </button>
+
+    </div>
+
+    <!-- POPUP MODAL -->
+    <div id="popupOverlay" class="popup-overlay hidden">
+      <div class="popup-box">
+        <h3 id="popupTitle">Title</h3>
+        <p id="popupMessage">Message</p>
+        <button id="popupBtn">OK</button>
+      </div>
+    </div>
+    <section id="aboutSection" class="info-section" style="display:none;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+<section id="profileSection" class="info-section profile-theme" style="display:none; border-top: 5px solid #ffd54f;">
+    <h2>👤 Your Profile</h2>
+    <div class="info-grid">
+        <div class="info-box"><strong>Name:</strong> <span id="userNameDisplay">Not Logged In</span></div>
+        <div id="userContactBox" class="info-box"><strong>Contact:</strong> <span id="userContactDisplay">-</span></div>
+    </div>
+</section>
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+        // =========================
+        // FEATURE JS (merged from daily-health.js)
+        // =========================
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const saveBtn = document.getElementById("saveCheckin");
+            if (!saveBtn) return;
+
+            let selectedMood = null;
+
+            let physicalData = {
+                tired: null,
+                pain: null,
+                dizzy: null,
+                slept: null
+            };
+
+            // =========================
+            // POPUP HELPER
+            // =========================
+            function showAlertPopup(title, message, callback = null) {
+                const overlay = document.getElementById("popupOverlay");
+                const titleEl = document.getElementById("popupTitle");
+                const msgEl = document.getElementById("popupMessage");
+                const btn = document.getElementById("popupBtn");
+
+                if (!overlay) {
+                    alert(message); // fallback
+                    return;
+                }
+
+                titleEl.textContent = title;
+                msgEl.textContent = message;
+                overlay.classList.remove("hidden");
+
+                btn.onclick = () => {
+                    overlay.classList.add("hidden");
+                    if (callback) callback();
+                };
+            }
+
+            // ------------------------
+            // Mood selection
+            // ------------------------
+            document.querySelectorAll(".mood-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    selectedMood = btn.dataset.mood;
+
+                    document.querySelectorAll(".mood-btn")
+                        .forEach(b => b.classList.remove("active"));
+
+                    btn.classList.add("active");
+                });
+            });
+
+            // ------------------------
+            // Yes / No selection
+            // ------------------------
+            document.querySelectorAll(".toggle-group").forEach(group => {
+                const question = group.dataset.question;
+
+                group.querySelectorAll(".toggle-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        physicalData[question] = btn.textContent.trim();
+
+                        group.querySelectorAll(".toggle-btn")
+                            .forEach(b => b.classList.remove("active"));
+
+                        btn.classList.add("active");
+                    });
+                });
+            });
+
+            // ------------------------
+            // Save Check-in
+            // ------------------------
+            saveBtn.addEventListener("click", async () => {
+
+                const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+                if (!user || !user.id) {
+                    showAlertPopup(
+                        "Login Required",
+                        "Please login first",
+                        () => window.location.href = "/"
+                    );
+                    return;
+                }
+
+                if (!selectedMood || Object.values(physicalData).some(v => v === null)) {
+                    showAlertPopup(
+                        "Incomplete Form",
+                        "Please answer all questions"
+                    );
+                    return;
+                }
+
+                const payload = {
+                    user_id: user.id,
+                    mood: selectedMood,
+                    tired: physicalData.tired,
+                    pain: physicalData.pain,
+                    dizzy: physicalData.dizzy,
+                    slept: physicalData.slept
+                };
+
+                try {
+                    const res = await fetch("/daily-health", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        showAlertPopup(
+                            "Success",
+                            "Daily health saved successfully!"
+                        );
+
+                        selectedMood = null;
+                        physicalData = { tired: null, pain: null, dizzy: null, slept: null };
+
+                        document.querySelectorAll(".active")
+                            .forEach(el => el.classList.remove("active"));
+                    } else {
+                        showAlertPopup(
+                            "Error",
+                            data.error || "Failed to save"
+                        );
+                    }
+
+                } catch (err) {
+                    console.error(err);
+                    showAlertPopup(
+                        "Server Error",
+                        "Something went wrong. Please try again."
+                    );
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

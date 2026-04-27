@@ -1,0 +1,625 @@
+/* ============================= */
+/* GLOBAL RESET & BODY STYLES */
+/* ============================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f5f2;
+}
+
+/* ============================= */
+/* OUTER SPACING & GREEN CARDS */
+/* ============================= */
+.page-wrapper {
+    padding: 40px;
+}
+
+.green-card {
+    background-color: #2f5d50; 
+    border-radius: 30px;
+    padding: 40px 50px 60px;
+    color: #f7f7f2;
+}
+
+/* ============================= */
+/* NAVBAR STYLES (First Page) */
+/* ============================= */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.logo span {
+    margin-left: 6px;
+    letter-spacing: 1px;
+}
+
+.nav-links a {
+    margin: 0 14px;
+    text-decoration: none;
+    color: #e6e6e1;
+    font-size: 14px;
+}
+
+.auth-buttons button {
+    border: none;
+    border-radius: 30px;
+    padding: 10px 18px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.login-btn,
+.signup-btn {
+    background-color: #f7f7f2;
+    color: #2f5d50;
+}
+
+/* ============================= */
+/* HERO SECTION (First Page) */
+/* ============================= */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 60px;
+    gap: 20px;
+}
+
+.hero-text {
+    max-width: 45%;
+}
+
+.hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-text em {
+    font-style: italic;
+}
+
+.hero-text p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #e3e3dc;
+}
+
+.hero-image {
+    width: 45%;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 24px;
+}
+
+/* ============================= */
+/* MODALS & INPUTS (First Page) */
+/* ============================= */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    background: #e7f1ed;
+    padding: 30px;
+    border-radius: 24px;
+    width: 360px;
+    position: relative;
+    color: #2b3f3a;
+}
+
+.modal-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+}
+
+/* INPUTS & SELECTS */
+.modal-card input,
+.modal-card select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+/* Focus effect for inputs and selects */
+.modal-card input:focus,
+.modal-card select:focus {
+    border: 2px solid #4caf50;
+}
+
+/* Gender select tweaks */
+.modal-card select {
+    appearance: none;
+    -moz-appearance: none;
+    background: #f7f7f7 url("data:image/svg+xml;utf8,<svg fill='black' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+/* Age input number spinner removal */
+.modal-card input[type=number]::-webkit-inner-spin-button,
+.modal-card input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.modal-card button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    background: #2f5d50;
+    color: white;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.modal-card button:hover {
+    background: #244a40;
+}
+
+.captcha-box {
+    background: #cfe3dc;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+#captchaText {
+    font-weight: bold;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+/* ============================= */
+/* SERVICES, ABOUT, CONTACT (First Page) */
+/* ============================= */
+.services-box {
+    margin-top: 22px;
+    background-color: #efe9dc;
+    padding: 16px 20px;
+    border-radius: 16px;
+    max-width: 360px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    color: #3b4b44;
+}
+
+.services-dot {
+    font-size: 14px;
+    color: #3b4b44;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+    display: inline-block;
+}
+
+.services-box h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: #3b4b44;
+    line-height: 1.2;
+    white-space: normal;
+    overflow: visible;
+}
+
+.services-box p {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #3b4b44;
+    white-space: normal;
+    overflow: visible;
+}
+
+/* SERVICES SECTION WRAPPER */
+.services-section, .feature-section {
+    display: none;
+    padding: 60px 20px;
+    background-color: #e6f4ea;
+    text-align: center;
+}
+
+.services-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #3b4b44;
+    margin-bottom: 40px;
+}
+
+.services-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.feature-box {
+    background-color: #d9f0d6;
+    padding: 20px;
+    border-radius: 16px;
+    max-width: 250px;
+    flex: 1 1 250px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.feature-dot {
+    font-size: 14px;
+    color: #3b4b44;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+    display: inline-block;
+}
+
+.feature-box h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #3b4b44;
+}
+
+.feature-box p {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #3b4b44;
+}
+
+/* ABOUT & CONTACT BOXES */
+#about-us .feature-box,
+#contact-us .feature-box {
+    flex: 1 1 220px;
+    max-width: 250px;
+    background-color: #d9f0d6;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+#about-us .services-container,
+#contact-us .services-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* ============================= */
+/* DASHBOARD PAGE PASTEL GREEN-YELLOW THEME */
+/* ============================= */
+.dashboard-page {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #f0fdf4 0%, #fefce8 100%);
+    padding: 40px 50px;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    color: #3b4b44;
+    transition: background 0.5s ease;
+}
+
+/* Navbar */
+.dashboard-navbar {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: #3b4b44;
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    padding: 12px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+#mainHeader {
+    width: 100%;
+    height: auto; /* prevent it from stretching */
+}
+.dashboard-navbar img {
+    width: 50px;       /* adjust as needed */
+    height: 50px;      /* adjust as needed */
+    object-fit: cover; /* keeps it from stretching */
+    border-radius: 50%; /* makes it circular */
+    cursor: pointer;    /* keeps hover pointer */
+}
+
+/* Logo */
+.dashboard-logo img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #a8d5ba;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-logo img:hover {
+    transform: scale(1.08);
+    border-color: #ffe78f;
+}
+
+/* Container for boxes */
+.dashboard-container {
+    margin-top: 100px;
+}
+
+/* Boxes grid */
+.dashboard-box-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+/* Individual box style */
+.dashboard-box {
+    background: #f4fbf7;
+    padding: 35px 25px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: #3b4b44;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+}
+
+.dashboard-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+    background: #d9f0d6;
+}
+
+/* Navbar links */
+.dashboard-page .nav-links a {
+    color: #3b4b44;
+    text-decoration: none;
+    margin: 0 15px;
+    padding-bottom: 4px;
+    transition: border-bottom 0.3s ease, color 0.3s ease;
+}
+
+.dashboard-page .nav-links a.active,
+.dashboard-page .nav-links a:hover {
+    border-bottom: 3px solid #ffe78f;
+    color: #2e3a34;
+}
+
+/* Info section (About & Contact) */
+.dashboard-page .info-section {
+    margin-top: 100px; /* Increased from 30px to 100px for a better gap */
+    padding: 40px 20px;
+    text-align: center;
+    display: none;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.dashboard-page .info-section h2 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #3b4b44;
+}
+
+/* Info boxes */
+.dashboard-page .info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    color: #3b4b44;
+    font-size: 15px;
+    line-height: 1.4;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.dashboard-page .info-box:hover {
+    transform: translateY(-5px);
+    background: #fef9d6;
+}
+
+
+/* ============================= */
+/* RESPONSIVE DESIGN */
+/* ============================= */
+@media screen and (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .hero-text, .hero-image {
+        max-width: 100%;
+    }
+    .hero-image img {
+        height: auto;
+    }
+    .dashboard-box-container {
+        grid-template-columns: 1fr;
+    }
+    .services-box, .feature-box, #about-us .feature-box, #contact-us .feature-box {
+        max-width: 100%;
+    }
+}
+/* ============================= */
+/* USER INFO MODAL – PASTEL BLUE */
+/* ============================= */
+
+.user-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.user-modal-content {
+    background: linear-gradient(160deg, #f4fbf7, #eefaf3);
+    padding: 22px 28px;
+    border-radius: 18px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    animation: popIn 0.35s ease;
+}
+
+/* Heading */
+.user-modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    margin-bottom: 22px;
+    color: #103960;
+}
+
+/* User info text */
+.user-modal-content p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #103960;
+    font-weight: 500;
+}
+
+/* Logout button */
+.user-modal-content button {
+    margin-top: 25px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 22px;
+    background: #103960;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-modal-content button:hover {
+    background: #5a95cc;
+    transform: translateY(-2px);
+}
+
+/* Smooth pop animation */
+@keyframes popIn {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+/* ============================= */
+/* POPUP STYLING WITH BORDER */
+/* ============================= */
+.popup {
+    position: fixed;
+    top: 40%; /* slightly below center */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f9f7de; /* pastel yellow base */
+    color: #000000;
+    padding: 18px 28px;
+    border-radius: 12px;
+    border: 2px solid #fddf70; /* soft yellow border */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease;
+}
+
+/* subtle light blue hint */
+.popup.popup-info {
+    background: linear-gradient(135deg, #fff8b5, #d0f0fd);
+    border-color: #aee1f9; /* light blue border hint */
+}
+
+/* show animation */
+.popup.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* optional: slightly shrink back when disappearing */
+.popup.show.fade-out {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* Ensure Header Links are always visible */
+#mainHeader a, 
+#mainHeader .nav-link,
+#mainHeader #aboutUs, 
+#mainHeader #contactUs {
+    color: #2f4f1a !important; /* A dark, readable green/black */
+    text-decoration: none;
+    font-weight: 600;
+    opacity: 1 !important;
+}
+
+/* Add a hover effect so users know they are clickable */
+#mainHeader a:hover {
+    color: #064e45 !important;
+    text-decoration: underline;
+}
+

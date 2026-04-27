@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAHAARA | Progress</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/script.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { margin: 0; font-family: "Segoe UI", sans-serif; background: #ffffff; color: #1f2933; }
+h2 { margin-bottom: 10px; }
+.container { max-width: 1100px; margin: auto; padding: 30px; }
+
+/* FORM */
+.form-card { background: #f8fafc; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+input, select { padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; width: 100%; }
+button { background: #0f172a; color: white; padding: 12px 18px; border: none; border-radius: 8px; cursor: pointer; margin-top: 15px; }
+button:hover { background: #020617; }
+
+/* PROFILE CARD */
+.profile-card { background: #0f172a; color: white; border-radius: 18px; padding: 18px 22px; max-width: 650px; margin: 20px auto; box-shadow: 0 8px 18px rgba(0,0,0,0.2); display: none; }
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.profile-card p { margin: 6px 0; font-size: 14px; }
+.edit-btn { background: white; color: #0f172a; font-weight: 600; margin-top: 16px; padding: 8px 16px; border-radius: 10px; display: inline-block; }
+
+/* DASHBOARD */
+.dashboard { margin-top: 40px; display: none; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+/* COMPLETION CARD */
+#completionCard { display: none; background: #22c55e; color: white; text-align: center; padding: 20px; border-radius: 18px; margin: 20px auto; box-shadow: 0 8px 18px rgba(0,0,0,0.2); }
+
+.chart-card { background: #ffffff; padding: 20px; border-radius: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+footer { text-align: center; margin-top: 40px; color: #64748b; }
+/* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+/* Add this to your existing <style> */
+.container { 
+    opacity: 0; 
+    transition: opacity 0.5s ease-in-out; 
+}
+
+.container.loaded { 
+    opacity: 1; 
+}
+
+/* Initially hide both to prevent the 'split second' flash */
+#formSection, #profileCard, #dashboard {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+    <!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+<div class="container">
+<h2>📊 Progress</h2>
+<!-- FORM -->
+<div class="form-card" id="formSection">
+<h3>User Details</h3>
+
+<div class="form-grid">
+<input id="name" placeholder="Name">
+<input id="age" type="number" placeholder="Age">
+<select id="gender"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+<input id="contact" placeholder="Contact">
+<input id="weight" placeholder="Weight (kg)">
+<input id="height" placeholder="Height (cm)">
+<input id="conditions" placeholder="Chronic Conditions">
+<input id="allergies" placeholder="Allergies">
+<input id="sleep_hours" placeholder="Sleep Hours (e.g., 5-6 hours)">
+<input id="water_goal" placeholder="Water Goal (e.g., 3L)">
+<input id="exercise_frequency" placeholder="Exercise Frequency">
+<input id="diet" placeholder="Dietary Preference">
+<input id="activities" placeholder="Favorite Activities">
+<input id="goals" placeholder="Wellness Goals">
+</div>
+<button onclick="saveProfile()">Save Profile</button>
+</div>
+
+<!-- PROFILE CARD -->
+<div class="profile-card" id="profileCard">
+<h3>👤 Your Health Profile</h3>
+<p id="profileName"></p>
+
+<div class="profile-grid" id="profileData"></div>
+<button class="edit-btn" onclick="editProfile(JSON.parse(localStorage.getItem('userProfile_' + localStorage.getItem('currentUserContact'))))">Edit Profile</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+<h3>📈 Wellness Dashboard</h3>
+<div class="charts">
+<div class="chart-card"><canvas id="streakChart"></canvas></div>
+<div class="chart-card"><canvas id="activityChart"></canvas></div>
+</div>
+</div>
+
+<!-- COMPLETION CARD -->
+<div id="completionCard">
+<h3>🎉 Congratulations!</h3>
+<p>You've completed all your exercises for the day. Keep up the great work! 🌟</p>
+</div>
+
+<footer>SAHAARA • Your Health, Your Progress 🌱</footer>
+</div>
+<section id="aboutSection" class="info-section" style="display:none; margin: 40px auto;">
+    <h3>About SAHAARA</h3>
+    <div class="info-grid">
+        <div class="info-box"><strong>Ecosystem:</strong> A unified health suite for seniors.</div>
+        <div class="info-box"><strong>Tracking:</strong> Real-time data visualization via Chart.js.</div>
+        <div class="info-box"><strong>Mission:</strong> Promoting independence through digital wellness.</div>
+    </div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto;">
+    <h3>Contact Support</h3>
+    <div class="info-grid">
+        <div class="info-box">📧 support@sahaara.com</div>
+        <div class="info-box">📞 Technical Support: +91 98765 43210</div>
+        <div class="info-box">📍 24/7 Wellness Monitoring Center</div>
+    </div>
+</section>
+
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+
+
+let streakChartInstance = null;
+let activityChartInstance = null;
+let waterChartInstance = null;
+let exerciseChartInstance = null;
+let gamesChartInstance = null;
+let medicationChartInstance = null;
+let streaksChartInstance = null;
+
+// ------------------ Clear Form ------------------
+function clearForm() {
+    const fields = ["name","age","gender","contact","weight","height","conditions",
+                    "allergies","sleep_hours","water_goal","exercise_frequency","diet",
+                    "activities","goals"];
+    fields.forEach(f => {
+        const el = document.getElementById(f);
+        if(el) el.value = "";
+    });
+    document.getElementById("formSection").style.display = "block";
+    document.getElementById("profileCard").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+}
+
+// ------------------ Save Profile ------------------
+function saveProfile() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if(!user){ alert("Not logged in"); return; }
+
+    const data = {
+        user_id: user.id,   // ✅ MAIN FIX
+        name: document.getElementById("name").value.trim(),
+        age: parseInt(document.getElementById("age").value) || null,
+        gender: document.getElementById("gender").value,
+        contact: document.getElementById("contact").value.trim(),
+        weight: document.getElementById("weight").value.trim(),
+        height: document.getElementById("height").value.trim(),
+        conditions: document.getElementById("conditions").value.trim(),
+        allergies: document.getElementById("allergies").value.trim(),
+        sleep_hours: document.getElementById("sleep_hours").value.trim(),
+        water_goal: document.getElementById("water_goal").value.trim(),
+        exercise_frequency: document.getElementById("exercise_frequency").value.trim(),
+        diet: document.getElementById("diet").value.trim(),
+        activities: document.getElementById("activities").value.trim(),
+        goals: document.getElementById("goals").value.trim()
+    };
+
+    fetch("/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(profile => {
+        displayProfile(profile);
+    })
+    .catch(err => console.error("Error saving profile:", err));
+}
+
+// ------------------ Display Profile ------------------
+function displayProfile(profile) {
+    document.getElementById("formSection").style.display = "none";
+    document.getElementById("profileCard").style.display = "block";
+    document.getElementById("dashboard").style.display = "block";
+
+    document.getElementById("profileName").innerHTML = "<strong>Name:</strong> " + profile.name;
+
+    const profileDataDiv = document.getElementById("profileData");
+    profileDataDiv.innerHTML = "";
+
+    const fields = ["age","gender","contact","weight","height","conditions","allergies",
+                    "sleep_hours","water_goal","exercise_frequency","diet","activities","goals"];
+    fields.forEach(key => {
+        if (profile[key]) {
+            let value = profile[key];
+            if (key === "weight" && !value.toLowerCase().includes("kg")) value += " kg";
+            if (key === "height" && !value.toLowerCase().includes("cm")) value += " cm";
+
+            let label = key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+            profileDataDiv.innerHTML += `<p><strong>${label}:</strong> ${value}</p>`;
+        }
+    });
+
+    fetchDashboard(profile.user_id);   // ✅
+}
+
+// ------------------ Edit Profile ------------------
+function editProfile(profile) {
+    document.getElementById("formSection").style.display = "block";
+    document.getElementById("profileCard").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+
+    const fields = ["name","age","gender","contact","weight","height","conditions","allergies",
+                    "sleep_hours","water_goal","exercise_frequency","diet","activities","goals"];
+    fields.forEach(key => {
+        const input = document.getElementById(key);
+        if(input && profile[key] !== undefined && profile[key] !== null){
+            let value = profile[key];
+            if(key === "weight") value = value.replace(/\s?kg/i,"");
+            if(key === "height") value = value.replace(/\s?cm/i,"");
+            input.value = value;
+        }
+    });
+}
+
+// ------------------ Fetch Dashboard ------------------
+function fetchDashboard(user_id = null) {
+    if(!user_id){
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        user_id = user?.id;
+    }
+    if(!user_id) return;
+
+    fetch(`/api/progress-data?user_id=${user_id}`)   // ✅
+        .then(res => res.json())
+        .then(data => {
+            if(data.error) return console.error(data.error);
+
+            const streakValues = [
+                data.streaks["Health Check-in"],
+                data.streaks["Medication"],
+                data.streaks["Water"],
+                data.streaks["Exercise"],
+                data.streaks["Memory Game"],
+                data.streaks["Health Tips"]
+            ];
+            const activityValues = [data.water, data.exercise, 0, data.games, data.medication];
+
+            loadCharts(streakValues, activityValues);
+            renderIndividualCharts(data);
+        })
+        .catch(err => console.error("Error fetching dashboard data:", err));
+}
+
+// ------------------ Load Combined Charts ------------------
+function loadCharts(streakData=[0,0,0,0,0,0], activityData=[0,0,0,0,0]){
+    const streakCtx = document.getElementById("streakChart").getContext("2d");
+    const activityCtx = document.getElementById("activityChart").getContext("2d");
+
+    if(streakChartInstance) streakChartInstance.destroy();
+    if(activityChartInstance) activityChartInstance.destroy();
+
+    streakChartInstance = new Chart(streakCtx, {
+        type:"bar",
+        data:{ labels:["Health Check-in","Medication","Water","Exercise","Memory Game","Health Tips"],
+               datasets:[{ label:"Weekly Streak (Days)", data:streakData, backgroundColor:"#0f172a" }] }
+    });
+
+    activityChartInstance = new Chart(activityCtx, {
+        type:"pie",
+        data:{ labels:["Water Intake","Exercise","Mental Wellness","Games","Medication"],
+               datasets:[{ data: activityData, backgroundColor:["#0f172a","#1e293b","#334155","#475569","#64748b"] }] }
+    });
+}
+
+// ------------------ Render Individual Charts ------------------
+function renderIndividualCharts(data){
+    const chartsConfig = [
+        {id:"waterChart", label:"Water", value:data.water, color:"#4ade80", title:"Water Intake Progress"},
+        {id:"exerciseChart", label:"Exercise", value:data.exercise, color:"#60a5fa", title:"Exercise Progress"},
+        {id:"gamesChart", label:"Games", value:data.games, color:"#facc15", title:"Memory Game Progress"},
+        {id:"medicationChart", label:"Medication", value:data.medication, color:"#f87171", title:"Medication Adherence"},
+    ];
+
+    chartsConfig.forEach(cfg => {
+        const ctx = document.getElementById(cfg.id).getContext("2d");
+        let instanceName = window[cfg.id+"Instance"];
+        if(instanceName) instanceName.destroy();
+        window[cfg.id+"Instance"] = new Chart(ctx, {
+            type:"bar",
+            data:{ labels:[cfg.label+" Logs"], datasets:[{ label:cfg.label, data:[cfg.value], backgroundColor:cfg.color }] },
+            options:{ responsive:true, plugins:{ legend:{display:false}, title:{display:true, text:cfg.title} }, scales:{ y:{ beginAtZero:true } } }
+        });
+    });
+
+    const streaksCtx = document.getElementById("streaksChart").getContext("2d");
+    if(streaksChartInstance) streaksChartInstance.destroy();
+    streaksChartInstance = new Chart(streaksCtx, {
+        type:"radar",
+        data:{ labels:Object.keys(data.streaks),
+               datasets:[{ label:"Current Streaks", data:Object.values(data.streaks),
+                           backgroundColor:"rgba(99,102,241,0.2)", borderColor:"#6366f1", pointBackgroundColor:"#6366f1" }] },
+        options:{ responsive:true, plugins:{ title:{display:true, text:"Health Streaks"} },
+                  scales:{ r:{ beginAtZero:true, max: Math.max(...Object.values(data.streaks))+2 } } }
+    });
+}
+
+// ------------------ Initialize Page ------------------
+window.onload = function() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    const container = document.querySelector(".container");
+
+    if (!user) {
+        clearForm();
+        container.classList.add("loaded"); // Fade in the form
+        return;
+    }
+
+    fetch(`/api/profile?user_id=${user.id}`)
+        .then(res => res.json())
+        .then(profile => {
+            if (profile.error) {
+                clearForm();
+            } else {
+                displayProfile(profile);
+            }
+            // Small timeout ensures the display toggle finishes before fading in
+            setTimeout(() => {
+                container.classList.add("loaded");
+            }, 50);
+        })
+        .catch(err => {
+            console.error(err);
+            clearForm();
+            container.classList.add("loaded");
+        });
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- DASHBOARD NAVBAR -->
+<div class="dashboard-navbar">
+
+    <!-- LEFT: LOGO -->
+    <div class="logo" id="dashboardLogo" style="cursor:pointer;">
+        🌻 <span>SAHAARA</span>
+    </div>
+
+    <!-- CENTER NAV LINKS -->
+    <nav class="nav-links">
+        <a href="#" id="dashboardAbout">About Us</a>
+        <a href="#" id="dashboardContact">Contact Us</a>
+    </nav>
+
+
+    <!-- RIGHT: PROFILE ICON -->
+    <div class="dashboard-profile">
+        <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" id="profileLogo" style="cursor:pointer;">
+    </div>
+
+</div>
+
+<script>
+    // Logo click → go to dashboard
+    const logo = document.getElementById("dashboardLogo");
+    if (logo) logo.addEventListener("click", () => window.location.href = "/dashboard");
+</script>

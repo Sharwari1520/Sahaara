@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health Tips 📰 | SAHAARA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+    <style>
+        /* =========================
+   CSS – Mint Green Pastel Theme
+========================= */
+body {
+    margin: 0;
+    font-family: "Inter", Arial, sans-serif;
+    background: #e6f7f1;
+    color: #0f2f2b;
+    display: flex;
+    flex-direction: column; /* Stacks header on top */
+    align-items: center;    /* Centers the tips-container horizontally */
+    min-height: 100vh;
+}
+/* Ensure the header takes the full width of the screen */
+#mainHeader {
+    width: 100%;
+    margin-bottom: 20px; /* Optional: adds some space before the tips begin */
+}
+
+/* Optional: Center the tips vertically if the page is tall */
+.tips-container {
+    background: #f4fffb;
+    width: 95%;
+    max-width: 680px;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    margin-bottom: 40px; /* Adds space at the bottom of the page */
+}
+
+/* Bigger + wider container */
+.tips-container {
+    background: #f4fffb;
+    width: 95%;
+    max-width: 680px;   /* wider */
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+/* Headings */
+h1 {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 34px;
+    color: #064e45;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 28px;
+    color: #2f7f73;
+}
+
+/* Tip cards */
+.tip-card {
+    background: #c9f2e4;  /* mint card */
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 18px;
+    transition: 0.2s ease;
+}
+
+.tip-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* Tip title */
+.tip-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 20px;     /* bigger */
+    color: #045d52;
+}
+
+/* Actual tips – bigger & more readable */
+.tip-text {
+    font-size: 18px;     /* much larger */
+    line-height: 1.7;
+    color: #0b3b35;
+}
+
+/* Footer */
+.date-text {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 16px;
+    color: #3c7f77;
+}
+
+.note {
+    margin-top: 18px;
+    font-size: 13px;
+    text-align: center;
+    opacity: 0.85;
+    color: #2f6f67;
+}
+/* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+
+<body>
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+    <div class="tips-container">
+        <h1>Health Tips 📰</h1>
+        <div class="subtitle">Simple wellness tips for today</div>
+
+        <div class="tip-card">
+            <div class="tip-title">🌿 Daily Wellness Tip</div>
+            <div class="tip-text" id="wellnessTip"></div>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-title">🧠 Mental Wellness</div>
+            <div class="tip-text" id="mentalTip"></div>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-title">💧 Hydration & Body</div>
+            <div class="tip-text" id="bodyTip"></div>
+        </div>
+
+        <div class="tip-card">
+            <div class="tip-title">🛡️ Safety Reminder</div>
+            <div class="tip-text" id="safetyTip"></div>
+        </div>
+
+        <div class="date-text" id="todayDate"></div>
+
+        <div class="note">
+            These tips are for general wellness only and not medical advice.
+        </div>
+    </div>
+    <section id="aboutSection" class="info-section" style="display:none; margin: 20px auto; max-width: 680px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 20px auto; max-width: 680px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+
+    <!-- =========================
+         JavaScript – Daily Tips Logic
+    ========================= -->
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+
+
+        const wellnessTips = [
+            "Start your day with a glass of water.",
+            "Sit straight and relax your shoulders.",
+            "Step into sunlight for a few minutes.",
+            "Wash your face before sleeping.",
+            "Take short breaks between long tasks."
+        ];
+
+        const mentalTips = [
+            "Take three slow deep breaths.",
+            "It’s okay to pause and rest.",
+            "Notice one good thing around you.",
+            "Your feelings are valid.",
+            "Do one thing today just for yourself."
+        ];
+
+        const bodyTips = [
+            "Sip water even if you’re not thirsty.",
+            "Stretch your neck and back gently.",
+            "Stand up and move for two minutes.",
+            "Avoid skipping meals today.",
+            "Relax your eyes after screen time."
+        ];
+
+        const safetyTips = [
+            "Keep emergency contacts updated.",
+            "Don’t ignore recurring pain.",
+            "Trust your instincts in unsafe situations.",
+            "Take medicines only as prescribed.",
+            "Rest if your body feels exhausted."
+        ];
+
+        function getDailyIndex(arrayLength) {
+            const today = new Date();
+            return today.getDate() % arrayLength;
+        }
+
+        document.getElementById("wellnessTip").textContent =
+            wellnessTips[getDailyIndex(wellnessTips.length)];
+
+        document.getElementById("mentalTip").textContent =
+            mentalTips[getDailyIndex(mentalTips.length)];
+
+        document.getElementById("bodyTip").textContent =
+            bodyTips[getDailyIndex(bodyTips.length)];
+
+        document.getElementById("safetyTip").textContent =
+            safetyTips[getDailyIndex(safetyTips.length)];
+
+        const today = new Date();
+        document.getElementById("todayDate").textContent =
+            "Tips for " + today.toDateString();
+    </script>
+
+</body>
+</html>

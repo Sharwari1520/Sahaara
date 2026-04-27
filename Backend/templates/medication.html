@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medication Reminder 💊</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+
+    <style>
+        /* =========================
+           FEATURE CSS (medication + shared styles merged)
+        ========================= */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        /* HEADER */
+        .medication-header {
+            text-align: center;
+            margin: 30px 0;
+            color: #0d2c91;
+        }
+        .medication-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .medication-header p {
+            margin: 5px 0 0;
+            font-size: 1rem;
+        }
+
+        /* FORM CONTAINER */
+        .medication-form-container {
+    background: #fff;
+    max-width: 680px;   /* same width as Health Tips */
+    width: 95%;
+    margin: 30px auto;
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+
+        .medication-form-container h2 {
+            text-align: center;
+            color: #0d2c91;
+            margin-bottom: 15px;
+        }
+
+        /* FORM FIELDS */
+        .medication-form input,
+        .medication-form select {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .medication-form .time-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .medication-form .time-group label {
+            min-width: 50px;
+        }
+
+        .medication-form .or-text {
+            margin: 0 5px;
+        }
+
+        /* SAVE BUTTON */
+        .save-btn {
+            width: 100%;
+            background-color: #0d2c91;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .save-btn:hover {
+            background-color: #0b2480;
+        }
+
+        /* TODAY'S MEDICATIONS */
+        .today-medications {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .today-medications h2 {
+            color: #0d2c91;
+            margin-bottom: 15px;
+        }
+
+        /* MEDICATION CARD */
+        .med-card {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .med-left {
+            max-width: 80%;
+        }
+
+        .med-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .med-dosage {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .med-info span,
+        .med-status-info span {
+            font-size: 0.85rem;
+            margin-right: 10px;
+        }
+
+        .completion-badge {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* CARD BUTTONS */
+        .med-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+
+        .taken-btn {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .taken-btn:hover {
+            background-color: #218838;
+        }
+
+        .missed-btn {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .missed-btn:hover {
+            background-color: #e0a800;
+        }
+
+        /* DELETE ICON */
+        .delete-icon {
+            font-size: 22px;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        /* =========================
+           POPUP STYLES
+        ========================= */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .popup-box {
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        #popupTitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        #popupMessage {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        /* POPUP BUTTONS */
+        #popupBtn, #cancelBtn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        #popupBtn {
+            background-color: #0d2c91;
+            color: #fff;
+        }
+
+        #popupBtn:hover {
+            background-color: #0b2480;
+        }
+
+        #cancelBtn {
+            background-color: #ccc;
+            color: #000;
+        }
+
+        #cancelBtn:hover {
+            background-color: #999;  
+        }
+        /* Styling for About/Contact on feature pages */
+.info-section {
+    width: 95%;
+    max-width: 680px;
+    margin: 40px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #d8f3dc, #fef9c3);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.info-box {
+    background: #fffde7;
+    padding: 15px;
+    border-radius: 10px;
+    width: 180px;
+    margin: 10px;
+    display: inline-block;
+    color: #3b4b44;
+    font-size: 14px;
+}
+/* Profile Specific Styles */
+.profile-theme {
+    background: linear-gradient(135deg, #fff3c4, #ffffff);
+    border: 2px solid #ffd54f;
+}
+
+.profile-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#profileSection h2 {
+    color: #342a0a;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+<body class="medication-page">
+<!-- Header placeholder -->
+<div id="mainHeader"></div>
+
+    <div class="medication-header">
+        <h1>Medication Reminder 💊</h1>
+    </div>
+
+    <div class="medication-form-container">
+        <h2>Add Medication</h2>
+
+        <form id="medicationForm" class="medication-form">
+            <input type="text" id="medName" placeholder="Medicine Name" required />
+            <input type="text" id="dosage" placeholder="Dosage (e.g. 1 tablet / 5 ml)" required />
+            <input type="email" id="reminderEmail" placeholder="Email for reminders (e.g. user@gmail.com)" required />
+
+            <div class="time-group">
+                <label>Time</label>
+                <select id="time">
+                    <option value="">Select time</option>
+                    <option value="Morning">Morning</option>
+                    <option value="Afternoon">Afternoon</option>
+                    <option value="Night">Night</option>
+                </select>
+                <span class="or-text"><b>Exact Time</b></span>
+                <input type="time" id="exactTime" />
+            </div>
+
+            <select id="frequency" required>
+                <option value="">Frequency</option>
+                <option value="daily">Daily</option>
+                <option value="alternate">Alternate Days</option>
+            </select>
+
+            <input type="number" id="duration" placeholder="Duration (in days)" min="1" required />
+            <input type="date" id="startDate" required />
+
+            <button type="submit" class="save-btn">Save Medication</button>
+        </form>
+    </div>
+
+    <div class="today-medications">
+        <h2>Daily Medicines</h2>
+        <div id="medicationList" class="medication-list"></div>
+    </div>
+
+    <div id="popupOverlay" class="popup-overlay hidden">
+        <div class="popup-box">
+            <h3 id="popupTitle">Alert</h3>
+            <p id="popupMessage">Message goes here.</p>
+            <button id="popupBtn" class="ohk-btn">OK</button>
+            <button id="cancelBtn" class="cancel-btn hidden">No</button>
+        </div>
+    </div>
+    <section id="aboutSection" class="info-section" style="display:none; margin: 40px auto; max-width: 700px;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<section id="contactSection" class="info-section" style="display:none; margin: 40px auto; max-width: 700px;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+    <div class="user-modal" id="userModal">
+    <div class="user-modal-content">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn">Logout</button>
+    </div>
+</div>
+<div class="user-modal" id="userModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+    <div class="user-modal-content" style="background: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 250px;">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn" style="margin-top: 20px; padding: 10px 20px; background: #ffd54f; border: none; border-radius: 5px; cursor: pointer;">Logout</button>
+    </div>
+</div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const mainHeader = document.getElementById("mainHeader");
+    const userModal = document.getElementById("userModal");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const displayName = document.getElementById("displayName");
+    const displayAge = document.getElementById("displayAge");
+    const displayGender = document.getElementById("displayGender");
+
+    // 1. Unified Header Load
+    fetch("/templates/header")
+        .then(res => res.text())
+        .then(data => {
+            mainHeader.innerHTML = data;
+
+            // Re-attach logo click
+            const logo = mainHeader.querySelector("#dashboardLogo");
+            if (logo) {
+                logo.addEventListener("click", () => window.location.href = "/dashboard");
+            }
+
+            // Profile Icon Click - Opens the Modal like Dashboard
+            const profileLogo = mainHeader.querySelector("#profileLogo");
+            if (profileLogo && userModal) {
+                profileLogo.addEventListener("click", () => {
+                    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+                    if (!user) {
+                        window.location.href = "/";
+                        return;
+                    }
+                    // Fill Modal with same keys used in Dashboard
+                    displayName.textContent = `Name: ${user.username || user.name || 'N/A'}`;
+                    displayAge.textContent = `Age: ${user.age || 'N/A'}`;
+                    displayGender.textContent = `Gender: ${user.gender || 'N/A'}`;
+                    
+                    userModal.style.display = "flex";
+                });
+            }
+
+            // About & Contact Links
+            const aboutBtn = mainHeader.querySelector("#dashboardAbout");
+            const contactBtn = mainHeader.querySelector("#dashboardContact");
+
+            if (aboutBtn) {
+                aboutBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("aboutSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+
+            if (contactBtn) {
+                contactBtn.addEventListener("click", e => {
+                    e.preventDefault();
+                    const section = document.getElementById("contactSection");
+                    if (section) {
+                        section.style.display = "block";
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Failed to load header:", err));
+
+    // 2. Modal Controls (Close & Logout)
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "/";
+        });
+    }
+
+    if (userModal) {
+        userModal.addEventListener("click", e => {
+            if (e.target === userModal) userModal.style.display = "none";
+        });
+    }
+});
+    // =========================
+    // MEDICATION JS (merged)
+    // =========================
+    document.addEventListener("DOMContentLoaded", () => {
+        const medForm = document.getElementById("medicationForm");
+        const medicationList = document.getElementById("medicationList");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const popupBtn = document.getElementById("popupBtn");
+        const cancelBtn = document.getElementById("cancelBtn");
+
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        const userId = user?.id;
+
+        let pendingDeleteId = null;
+        let autoHideTimer = null;
+
+        // ==========================================
+        // 1. UNIVERSAL SMALL POPUP LOGIC
+        // ==========================================
+        function showPopup(title, message, isConfirm = false) {
+            if (autoHideTimer) clearTimeout(autoHideTimer);
+
+            document.getElementById("popupTitle").textContent = title;
+            document.getElementById("popupMessage").textContent = message;
+
+            popupOverlay.classList.remove("hidden");
+
+            if (isConfirm) {
+                popupBtn.textContent = "Yes";
+                cancelBtn.textContent = "No";
+                cancelBtn.classList.remove("hidden");
+            } else {
+                popupBtn.textContent = "OK";
+                cancelBtn.classList.add("hidden");
+
+                autoHideTimer = setTimeout(() => {
+                    popupOverlay.classList.add("hidden");
+                }, 3000);
+            }
+        }
+
+        // ==========================================
+        // 2. POPUP BUTTONS
+        // ==========================================
+        if (popupBtn) {
+            popupBtn.addEventListener("click", async () => {
+                if (pendingDeleteId) {
+                    const res = await fetch(`/api/medication?id=${pendingDeleteId}`, { method: "DELETE" });
+                    if (res.ok) {
+                        pendingDeleteId = null;
+                        showPopup("Deleted", "Medication removed successfully.");
+                        loadMedications();
+                    }
+                } else {
+                    popupOverlay.classList.add("hidden");
+                }
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener("click", () => {
+                pendingDeleteId = null;
+                popupOverlay.classList.add("hidden");
+            });
+        }
+
+        // ==========================================
+        // 3. LOAD MEDICATIONS
+        // ==========================================
+        async function loadMedications() {
+            if (!medicationList || !userId) return;
+
+            try {
+                const res = await fetch(`/api/medication?user_id=${userId}`);
+                const meds = await res.json();
+                medicationList.innerHTML = "";
+
+                if (!Array.isArray(meds) || meds.length === 0) {
+                    medicationList.innerHTML = `<p class="empty-msg" style="text-align:center; padding:20px;">No medications added yet.</p>`;
+                    return;
+                }
+
+                meds.forEach(med => {
+                    const card = document.createElement("div");
+                    card.className = "med-card";
+
+                    const dateObj = new Date(med.start_date);
+                    const istDate = dateObj.toLocaleDateString('en-IN');
+                    const isCompleted = med.duration <= 0;
+
+                    card.innerHTML = `
+                        <div class="med-left">
+                            <strong class="med-name">${med.name}</strong>
+                            <p class="med-dosage">${med.dosage}</p>
+                            <div class="med-info">
+                                <span>🕒 ${med.time}</span> | <span>📅 ${med.frequency}</span>
+                            </div>
+                            <div class="med-status-info">
+                                <span>⏳ ${isCompleted ? '0' : med.duration} days left</span> | <span>📆 Start: ${istDate}</span>
+                            </div>
+
+                            ${isCompleted ?
+                                `<div class="completion-badge">✅ ${med.name} Course Completed</div>` :
+                                `<div class="med-actions">
+                                    <button class="action-btn taken-btn"
+                                        data-id="${med.id}"
+                                        data-days="${med.duration}"
+                                        data-name="${med.name}">
+                                        Taken
+                                    </button>
+                                    <button class="action-btn missed-btn">Missed</button>
+                                </div>`
+                            }
+                        </div>
+                        <div class="med-right">
+                            <span class="delete-icon delete-med" data-id="${med.id}" style="cursor:pointer; font-size:20px;">🗑️</span>
+                        </div>
+                    `;
+                    medicationList.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error("Load Error:", err);
+            }
+        }
+
+        // ==========================================
+// 4. GLOBAL CLICK HANDLER (ABSOLUTE FINAL FIX)
+// ==========================================
+document.addEventListener("click", async (e) => {
+
+    const takenBtn = e.target.closest(".taken-btn");
+    if (takenBtn) {
+        e.stopPropagation();
+
+        const medId = takenBtn.dataset.id;
+        const medName = takenBtn.dataset.name;
+        const currentDays = parseInt(takenBtn.dataset.days);
+
+        if (currentDays <= 0) return;
+
+        const res = await fetch("/api/medication/update-duration", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: medId, duration: currentDays - 1 })
+        });
+
+        if (res.ok) {
+            if (currentDays - 1 <= 0) {
+                showPopup("Course Completed", `Great! You've completed your ${medName} course! ✅`);
+            } else {
+                showPopup("Status Updated", "Dose marked as Taken.");
+            }
+            loadMedications();
+        }
+        return;
+    }
+
+    const missedBtn = e.target.closest(".missed-btn");
+    if (missedBtn) {
+    const card = missedBtn.closest(".med-card");
+    const medId = card.querySelector(".delete-med").dataset.id;
+
+    await fetch("/api/medication/log-missed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ medication_id: medId, user_id: userId })
+    });
+
+    showPopup("Missed", "Marked as missed. Try to stay on track!");
+    return;
+}
+
+
+    const deleteBtn = e.target.closest(".delete-med");
+    if (deleteBtn) {
+        pendingDeleteId = deleteBtn.dataset.id;
+        showPopup("Are you sure?", "Do you want to delete this medication?", true);
+    }
+
+}, true); // 👈 THIS is the key
+
+
+        // ==========================================
+        // 5. ADD NEW MEDICATION
+        // ==========================================
+        if (medForm) {
+            medForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const timeVal = document.getElementById("exactTime").value || document.getElementById("time").value;
+
+                const payload = {
+                    user_id: userId,
+                    name: document.getElementById("medName").value.trim(),
+                    dosage: document.getElementById("dosage").value.trim(),
+                    time: timeVal,
+                    frequency: document.getElementById("frequency").value,
+                    duration: document.getElementById("duration").value,
+                    start_date: document.getElementById("startDate").value,
+                    reminder_email: document.getElementById("reminderEmail").value.trim()
+                };
+
+                if (!payload.name || !payload.time || !payload.duration) {
+                    showPopup("Missing Info", "Please fill in all required fields.");
+                    return;
+                }
+
+                const res = await fetch("/api/medication", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    showPopup("Success 💊", "Medication added successfully!");
+                    medForm.reset();
+                    loadMedications();
+                }
+            });
+        }
+
+        loadMedications();
+    });
+</script>
+
+</body>
+</html>

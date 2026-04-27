@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SAHAARA Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- SAME CSS AS INDEX -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard-page">
+
+<!-- MAIN HEADER -->
+<div id="mainHeader"></div>
+
+<!-- DASHBOARD CONTENT -->
+<div class="dashboard-container">
+    <div class="dashboard-box-container">
+
+        <div class="dashboard-box" onclick="openDailyHealth()">
+            <strong>Daily Health Check-in ✅</strong><br>
+            Log your daily health easily.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/medication-page'">
+            <strong>Medication Reminder 💊</strong><br>
+            Never miss your medicines.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/water-tracker'">
+            <strong>Water Intake Tracker 💧</strong><br>
+            Track daily hydration.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/sos'">
+            <strong>Emergency SOS 🔴</strong><br>
+            Instant emergency help.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/tips'">
+            <strong>Health Tips 📰</strong><br>
+            Simple wellness tips.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/exercise'">
+            <strong>Exercise & Mobility 🏃‍♀️</strong><br>
+            Gentle daily movement.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/memory'">
+            <strong>Memory Game 🧩</strong><br>
+            Fun Activities for sharp memory.
+        </div>
+
+        <div class="dashboard-box" onclick="window.location.href='/progress'">
+            <strong>Progress 📈</strong><br>
+            Keep family informed and connected.
+        </div>
+
+    </div>
+</div>
+
+<!-- ABOUT US SECTION -->
+<section id="aboutSection" class="info-section" style="display:none;">
+    <h2>About SAHAARA</h2>
+    <div class="info-box">Elderly care made simple</div>
+    <div class="info-box">Daily assistance & reminders</div>
+    <div class="info-box">Family-first support system</div>
+</section>
+
+<!-- CONTACT US SECTION -->
+<section id="contactSection" class="info-section" style="display:none;">
+    <h2>Contact Us</h2>
+    <div class="info-box">📧 support@sahaara.com</div>
+    <div class="info-box">📞 +91 98765 43210</div>
+</section>
+
+<!-- User Info Modal -->
+<div class="user-modal" id="userModal">
+    <div class="user-modal-content">
+        <h3>User Info</h3>
+        <p id="displayName"></p>
+        <p id="displayAge"></p>
+        <p id="displayGender"></p>
+        <button id="logoutBtn">Logout</button>
+    </div>
+</div>
+
+<!-- LINK EXISTING JS -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
